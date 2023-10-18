@@ -1,30 +1,6 @@
 #include "monty.h"
 
-char **splitString(char *contant, unsigned int cntr, int format)
-{
-	const char *delim = "\n ";
-	char **tokens = NULL;
-
-	(void)cntr;
-	(void)format;
-	tokens = malloc(sizeof(char *) * 2);
-	if (tokens == NULL)
-	{
-		/*you have to edit this to funtion in the  future*/
-		printf("Error: malloc failed\n");
-		free2d(tokens);
-		free(contant);
-		exit(EXIT_FAILURE);
-	}
-	tokens[0] = strtok(contant, delim);
-	if (tokens[0] == NULL)
-		return (NULL);
-	tokens[1] = strtok(NULL, delim);
-
-	return (tokens);
-}
-
-void findFunc(char **tokens, unsigned int cntr, int format)
+void findFunc(char *opCode, char *value, unsigned int cntr, int format)
 {
 	int i, found;
 	instruction_t opcodes[] = {
@@ -41,9 +17,9 @@ void findFunc(char **tokens, unsigned int cntr, int format)
 
 	for (found = 0, i = 0; opcodes[i].opcode != NULL; i++)
 	{
-		if (strcmp(opcodes[i].opcode, tokens[0]) == 0)
+		if (strcmp(opcodes[i].opcode, opCode) == 0)
 		{
-			handleFunc(opcodes[i].f, tokens, cntr, format);
+			handleFunc(opcodes[i].f, opCode, value, cntr, format);
 			found = 1;
 		}
 	}
@@ -51,52 +27,53 @@ void findFunc(char **tokens, unsigned int cntr, int format)
 	if (found == 0)
 	{
 		/*you have to edit this to funtion in the  future*/
-		printf("L%d: unknown instruction %s\n", cntr, tokens[0]);
-		free2d(tokens);
+		fprintf(stderr, "L%d: unknown instruction %s\n", cntr, opCode);
+		free_nodes();
+		fclose(head.file);
 		exit(EXIT_FAILURE);
 	}
 }
 
-void handleFunc(op_func func, char **tokens,unsigned int cntr, int format)
+void handleFunc(op_func func, char *opCode, char *value,
+unsigned int cntr, int format)
 {
 	stack_t *node = NULL;
 	int flag, i;
 
 	flag = 1;
 	(void)format;
-	if (strcmp(tokens[0], "push") == 0)
+	if (strcmp(opCode, "push") == 0)
 	{
-		if (tokens[1] != NULL && tokens[1][0] == '-')
+		if (value != NULL && value[0] == '-')
 		{
-			tokens[1] = tokens[1] + 1;
+			value = value + 1;
 			flag = -1;
 		}
-		for (i = 0; tokens[1][i] != '\0'; i++)
+		if (value == NULL)
 		{
-			if (isdigit(tokens[1][i]) == 0)
+			fprintf(stderr, "L%d: usage: push integer\n", cntr);
+			free_nodes();
+			fclose(head.file);
+			exit(EXIT_FAILURE);
+		}
+		for (i = 0; value[i] != '\0'; i++)
+		{
+			if (isdigit(value[i]) == 0)
 			{
-				/*you have to edit this to funtion in the  future*/
-				printf("L%d: usage: push integer\n", cntr);
-				free2d(tokens);
+				/*you have to edit this to funtion in the future*/
+				fprintf(stderr, "L%d: usage: push integer\n", cntr);
+				free_nodes();
+				fclose(head.file);
 				exit(EXIT_FAILURE);
 			}
 		}
-		node = createNode(atoi(tokens[1]) * flag);
-		if (node == NULL)
-		{
-			/*you have to edit this to funtion in the  future*/
-			printf("Error: malloc failed\n");
-			free2d(tokens);
-			exit(EXIT_FAILURE);
-		}
-		free2d(tokens);
+
+		node = createNode(atoi(value) * flag);
 		func(&node, cntr);
 	}
 	else
-		func(&head, cntr);
+		func(&head.stack, cntr);
 
-	if(tokens)
-		free2d(tokens);
 }
 
 /**
@@ -107,15 +84,18 @@ void handleFunc(op_func func, char **tokens,unsigned int cntr, int format)
 
 stack_t *createNode(int n)
 {
-    stack_t *new_node = malloc(sizeof(stack_t));
+	stack_t *new_node = malloc(sizeof(stack_t));
 
-    if (new_node == NULL)
-    {
-        printf("Error: malloc failed\n");
-        exit(EXIT_FAILURE);
-    }
-    new_node->n = n;
-    new_node->prev = NULL;
-    new_node->next = NULL;
-    return (new_node);
+	if (new_node == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		free_nodes();
+		fclose(head.file);
+		exit(EXIT_FAILURE);
+	}
+	new_node->n = n;
+	new_node->prev = NULL;
+	new_node->next = NULL;
+
+	return (new_node);
 }

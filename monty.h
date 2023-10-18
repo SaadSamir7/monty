@@ -12,6 +12,8 @@
 /* define */
 #define notUsed __attribute__((unused))
 
+#define INIT_STATE {NULL, NULL, NULL, NULL}
+
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
  * @n: integer
@@ -23,9 +25,9 @@
  */
 typedef struct stack_s
 {
-        int n;
-        struct stack_s *prev;
-        struct stack_s *next;
+	int n;
+	struct stack_s *prev;
+	struct stack_s *next;
 } stack_t;
 
 /**
@@ -38,12 +40,26 @@ typedef struct stack_s
  */
 typedef struct instruction_s
 {
-        char *opcode;
-        void (*f)(stack_t **stack, unsigned int line_number);
+	char *opcode;
+	void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
+/**
+ * struct state_s - opcode and its function
+ * @stack: the opcode
+ * @file: function to handle the opcode
+ * Description: opcode and its function
+*/
+typedef struct state_s
+{
+	stack_t *stack;
+	FILE *file;
+	char *opCode;
+	char *value;
+} state_t;
 
-extern stack_t *head;
+extern state_t head;
+
 typedef void (*op_func)(stack_t **, unsigned int);
 
 
@@ -59,12 +75,14 @@ void handle_nop(stack_t **stack, unsigned int line_number);
 void handle_sub(stack_t **stack, unsigned int line_number);
 
 void free2d(char **tokens);
-char **splitString(char *contant, unsigned int cntr, int format);
-void findFunc(char **tokens, unsigned int cntr, int format);
-void handleFunc(op_func func, char **tokens,unsigned int cntr, int format);
+void free_nodes(void);
+void splitString(char *contant, unsigned int cntr, int format);
+void findFunc(char *opCode, char *value, unsigned int cntr, int format);
+void handleFunc(op_func func, char *opCode, char *value, unsigned int cntr, int format);
 stack_t *createNode(int n);
 void oprationFile(char *filename);
 void readFile(FILE *readFile);
 int opCode(char *contant, unsigned int cntr, int format);
+
 
 #endif

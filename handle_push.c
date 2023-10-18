@@ -11,19 +11,16 @@ void handle_push(stack_t **stack, unsigned int line_number)
 
 	(void)line_number;
 	if (stack == NULL || *stack == NULL)
-	{
 		exit(EXIT_FAILURE);
-	}
 
-	if (head == NULL)
+
+	if (head.stack == NULL)
 	{
-		head = *stack;
+		head.stack = *stack;
+		return;
 	}
-	else
-	{
-		new_node = head;
-		head = *stack;
-		head->next = new_node;
-		new_node->prev = head;
-	}
+	new_node = head.stack;
+	head.stack = *stack;
+	head.stack->next = new_node;
+	new_node->prev = head.stack;
 }

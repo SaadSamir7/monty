@@ -1,32 +1,42 @@
 #include "monty.h"
 
-stack_t *head = NULL;
+state_t head = INIT_STATE;
+
+/**
+ * opCode - find opcode
+ * @contant: opcode
+ * @cntr: line number
+ * @format: format
+ * Return: format
+ */
 
 int opCode(char *contant, unsigned int cntr, int format)
 {
-	char **tokens = NULL;
+	char *opCode, *value;
+	const char *delim = "\n ";
 
-
+	/*printf("contant: %s\n", contant);*/
 	if (contant == NULL)
 	{
-		/*you have to edit this to funtion in the  future*/
-		printf("Error: malloc failed\n");
-		free2d(tokens);
-		free(contant);
+		fprintf(stderr, "Error: malloc failed\n");
+		free_nodes();
 		exit(EXIT_FAILURE);
 	}
-	tokens = splitString(contant, cntr, format);
+	opCode = strtok(contant, delim);
+	/*printf("opCode: %s\n", opCode);*/
+	if (opCode == NULL)
+		return (format);
+	value = strtok(NULL, delim);
+	/*printf("value: %s\n", value);*/
 
-	if (tokens == NULL)
-	{
-		free2d(tokens);
-		return(format);
-	}
-
-	findFunc(tokens, cntr, format);
-	free2d(tokens);
+	findFunc(opCode, value, cntr, format);
 	return (format);
 }
+
+/**
+ * readFile - read file
+ * @readFile: file to read
+ */
 
 void readFile(FILE *readFile)
 {
@@ -37,22 +47,31 @@ void readFile(FILE *readFile)
 	while (getline(&contant, &len, readFile) != -1)
 	{
 		cntr++;
+		/*printf("format: %s\n", contant);*/
 		format =  opCode(contant, cntr, format);
+
 	}
 	free(contant);
 }
 
+/**
+ * oprationFile - open and read file
+ * @filename: name of file
+ */
+
 void oprationFile(char *filename)
 {
-	FILE *read = fopen(filename, "r");
+	head.file = fopen(filename, "r");
 
-	if (read == NULL || filename == NULL)
+	if (head.file == NULL || filename == NULL)
 	{
-		/*you have to edit this to funtion in the  future*/
-		printf("Error: Can't open file %s\n", filename);
+		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		fclose(head.file);
 		exit(EXIT_FAILURE);
 	}
-	readFile(read);
+	/*printf("ffffffff2\n");*/
+	readFile(head.file);
+	fclose(head.file);
 }
 
 /**
@@ -66,10 +85,11 @@ int main(int argc, char **argv)
 {
 	if (argc != 2)
 	{
-		/*you have to edit this to funtion in the  future*/
-		printf("USAGE: monty file\n");
+		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
+	/*printf("ffffffff1\n");*/
 	oprationFile(argv[1]);
+	free_nodes();
 	return (0);
 }
