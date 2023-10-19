@@ -21,7 +21,7 @@ int exe(char *content, stack_t **stack, unsigned int counter, FILE *file)
 				{"mul", handle_mul},
 				{"mod", handle_mod},
 				{"queue", add_queue},
-				{"stack", add_stack},{"pchar", handle_pchar},
+				{"stack", add_stack}, {"pchar", handle_pchar},
 				{NULL, NULL}
 				};
 	unsigned int i = 0;

@@ -8,19 +8,19 @@
  */
 void handle_pchar(stack_t **head, unsigned int counter)
 {
-    int value = (*head)->n;
-    
-    if (*head == NULL)
-    {
-        fprintf(stderr, "L%u: can't pchar, stack empty\n", counter);
-        free_all(head);
-    }
-    
-    if (value < 0 || value > 127)
-    {
-        fprintf(stderr, "L%u: can't pchar, value out of range\n", counter);
-        free_all(head);
-    }
+	stack_t *value = *head;
 
-    printf("%c\n", (char)value);
+	if (*head == NULL)
+	{
+		fprintf(stderr, "L%u: can't pchar, stack empty\n", counter);
+		free_all(head);
+	}
+
+	if (value->n < 0 || value->n > 127)
+	{
+		fprintf(stderr, "L%u: can't pchar, value out of range\n", counter);
+		free_all(head);
+	}
+
+	printf("%c\n", value->n);
 }
