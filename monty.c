@@ -1,92 +1,48 @@
 #include "monty.h"
 
-state_t head = INIT_STATE;
+bus_t bus = {NULL, NULL, NULL, 0};
 
 /**
- * opCode - find opcode
- * @contant: opcode
- * @cntr: line number
- * @format: format
- * Return: format
- */
+* main - monty code interpreter
+* @argc: number of arguments
+* @argv: monty file location
+* Return: 0 on success
+*/
 
-int opCode(char *contant, unsigned int cntr, int format)
+int main(int argc, char *argv[])
 {
-	const char *delim = "\n ";
+	char *content;
+	FILE *file;
+	size_t size = 0;
+	ssize_t read_line = 1;
+	stack_t *stack = NULL;
+	unsigned int counter = 0;
 
-	/*printf("contant: %s\n", contant);*/
-	if (contant == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		free_nodes();
-		exit(EXIT_FAILURE);
-	}
-	head.opCode = strtok(contant, delim);
-	/*printf("opCode: %s\n", head.opCode);*/
-	if (head.opCode == NULL)
-		return (format);
-	head.value = strtok(NULL, delim);
-	/*rintf("value: %s\n", head.value);*/
-	findFunc(head.opCode, head.value, cntr, format);
-	return (format);
-}
-
-/**
- * readFile - read file
- * @readFile: file to read
- */
-
-void readFile(FILE *readFile)
-{
-	int cntr = 0, format = 0;
-	/*char *contant = NULL;*/
-	size_t len = 0;
-
-	for (cntr = 1; getline(&head.contant, &len, readFile) != -1; cntr++)
-	{
-		/*printf("format: \"%s\" \n", head.contant);*/
-		format =  opCode(head.contant, cntr, format);
-	}
-	free(head.contant);
-}
-
-/**
- * oprationFile - open and read file
- * @filename: name of file
- */
-
-void oprationFile(char *filename)
-{
-	head.file = fopen(filename, "r");
-
-	if (head.file == NULL || filename == NULL)
-	{
-		fprintf(stderr, "Error: Can't open file %s\n", filename);
-		free_nodes();
-		fclose(head.file);
-		exit(EXIT_FAILURE);
-	}
-	/*printf("ffffffff2\n");*/
-	readFile(head.file);
-	fclose(head.file);
-}
-
-/**
- * main - entry point
- * @argc: number of arguments
- * @argv: array of arguments
- * Return: 0 on success
- */
-
-int main(int argc, char **argv)
-{
 	if (argc != 2)
 	{
 		fprintf(stderr, "USAGE: monty file\n");
 		exit(EXIT_FAILURE);
 	}
-	/*printf("ffffffff1\n");*/
-	oprationFile(argv[1]);
-	free_nodes();
-	return (0);
+	file = fopen(argv[1], "r");
+	bus.file = file;
+	if (!file)
+	{
+		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
+		exit(EXIT_FAILURE);
+	}
+	while (read_line > 0)
+	{
+		content = NULL;
+		read_line = getline(&content, &size, file);
+		bus.content = content;
+		counter++;
+		if (read_line > 0)
+		{
+			execute(content, &stack, counter, file);
+		}
+		free(content);
+	}
+	free_stack(stack);
+	fclose(file);
+return (0);
 }
