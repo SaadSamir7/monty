@@ -78,6 +78,7 @@ void handle_push(stack_t **head, unsigned int number);
 void handle_pall(stack_t **head, unsigned int number);
 void handle_pint(stack_t **head, unsigned int number);
 
+
 void handle_pchar(stack_t **head, unsigned int counter);
 void handle_pstr(stack_t **head, unsigned int counter);
 void handle_rotl(stack_t **head, unsigned int counter);
