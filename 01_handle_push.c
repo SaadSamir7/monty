@@ -11,29 +11,29 @@ void handle_push(stack_t **head, unsigned int counter)
 {
 	int n, j = 0, flag = 0;
 
-	if (bus.arg)
+	if (heads.arg)
 	{
-		if (bus.arg[0] == '-')
+		if (heads.arg[0] == '-')
 			j++;
-		for (; bus.arg[j] != '\0'; j++)
+		for (; heads.arg[j] != '\0'; j++)
 		{
-			if (bus.arg[j] > 57 || bus.arg[j] < 48)
-				flag = 1; }
+			if (heads.arg[j] > 57 || heads.arg[j] < 48)
+				flag = 1;
+		}
 		if (flag == 1)
-		{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-			fclose(bus.file);
-			free(bus.content);
-			free_stack(*head);
-			exit(EXIT_FAILURE); }}
+		{
+			fprintf(stderr, "L%d: usage: push integer\n", counter);
+			free_all(head);
+		}
+	}
 	else
-	{ fprintf(stderr, "L%d: usage: push integer\n", counter);
-		fclose(bus.file);
-		free(bus.content);
-		free_stack(*head);
-		exit(EXIT_FAILURE); }
-	n = atoi(bus.arg);
-	if (bus.lifi == 0)
-		addnode(head, n);
+	{
+		fprintf(stderr, "L%d: usage: push integer\n", counter);
+		free_all(head);
+	}
+	n = atoi(heads.arg);
+	if (heads.check == 0)
+		addNode(head, n);
 	else
-		addqueue(head, n);
+		addQueue(head, n);
 }
