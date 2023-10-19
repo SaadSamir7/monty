@@ -82,7 +82,7 @@ void handle_pint(stack_t **head, unsigned int number);
 void handle_pchar(stack_t **head, unsigned int counter);
 void handle_pstr(stack_t **head, unsigned int counter);
 void handle_rotl(stack_t **head, unsigned int counter);
-void handle_rotr(stack_t **head, __attribute__((unused)) unsigned int counter);
+void handle_rotr(stack_t **head, unsigned int counter);
 
 /*Add Func*/
 void addNode(stack_t **head, int n);
