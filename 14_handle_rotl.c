@@ -8,25 +8,21 @@
  */
 void handle_rotl(stack_t **head, unsigned int counter)
 {
-	stack_t *first = *head;
-	stack_t *second = first->next;
-	stack_t *last = *head;
-
+	stack_t *new_head = (*head)->next;
+	stack_t *last_node = *head;
 	(void)counter;
+
 	if (*head == NULL || (*head)->next == NULL)
-	{
-		/* The stack is empty or has only one element, no rotation needed. */
 		return;
-	}
 
-	while (last->next != NULL)
+	while (last_node->next != NULL)
 	{
-		last = last->next;
+		last_node = last_node->next;
 	}
 
-	*head = second;
-	first->next = NULL;
-	second->prev = NULL;
-	last->next = first;
-	first->prev = last;
+	last_node->next = *head;
+	(*head)->prev = last_node;
+	(*head)->next = NULL;
+	new_head->prev = NULL;
+	*head = new_head;
 }
