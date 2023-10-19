@@ -12,7 +12,6 @@ state_t head = INIT_STATE;
 
 int opCode(char *contant, unsigned int cntr, int format)
 {
-	char *opCode, *value;
 	const char *delim = "\n ";
 
 	/*printf("contant: %s\n", contant);*/
@@ -22,13 +21,13 @@ int opCode(char *contant, unsigned int cntr, int format)
 		free_nodes();
 		exit(EXIT_FAILURE);
 	}
-	opCode = strtok(contant, delim);
-	/*printf("opCode: %s\n", opCode);*/
-	if (opCode == NULL)
+	head.opCode = strtok(contant, delim);
+	/*printf("opCode: %s\n", head.opCode);*/
+	if (head.opCode == NULL)
 		return (format);
-	value = strtok(NULL, delim);
-	/*printf("value: %s\n", value);*/
-	findFunc(opCode, value, cntr, format);
+	head.value = strtok(NULL, delim);
+	/*rintf("value: %s\n", head.value);*/
+	findFunc(head.opCode, head.value, cntr, format);
 	return (format);
 }
 
@@ -43,12 +42,10 @@ void readFile(FILE *readFile)
 	/*char *contant = NULL;*/
 	size_t len = 0;
 
-	while (getline(&head.contant, &len, readFile) != -1)
+	for (cntr = 1; getline(&head.contant, &len, readFile) != -1; cntr++)
 	{
-		cntr++;
-		/*printf("format: %s\n", contant);*/
+		/*printf("format: \"%s\" \n", head.contant);*/
 		format =  opCode(head.contant, cntr, format);
-
 	}
 	free(head.contant);
 }
@@ -65,6 +62,7 @@ void oprationFile(char *filename)
 	if (head.file == NULL || filename == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", filename);
+		free_nodes();
 		fclose(head.file);
 		exit(EXIT_FAILURE);
 	}

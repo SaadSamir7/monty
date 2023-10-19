@@ -12,7 +12,7 @@
 /* define */
 #define notUsed __attribute__((unused))
 
-#define INIT_STATE {NULL, NULL, NULL}
+#define INIT_STATE {NULL, NULL, NULL, NULL, NULL}
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -55,6 +55,8 @@ typedef struct state_s
 	stack_t *stack;
 	FILE *file;
 	char *contant;
+	char *value;
+	char *opCode;
 } state_t;
 
 extern state_t head;
@@ -77,11 +79,12 @@ void free2d(char **tokens);
 void free_nodes(void);
 void splitString(char *contant, unsigned int cntr, int format);
 void findFunc(char *opCode, char *value, unsigned int cntr, int format);
-void handleFunc(op_func func, char *opCode, char *value, unsigned int cntr, int format);
+void handleFunc(op_func func, unsigned int cntr, int format);
 stack_t *createNode(int n);
 void oprationFile(char *filename);
 void readFile(FILE *readFile);
 int opCode(char *contant, unsigned int cntr, int format);
+int not_a_number(char *s);
 
 
 #endif

@@ -26,11 +26,12 @@ void findFunc(char *opCode, char *value, unsigned int cntr, int format)
 		{NULL, NULL}
 	};
 
+	(void)value;
 	for (found = 0, i = 0; opcodes[i].opcode != NULL; i++)
 	{
 		if (strcmp(opcodes[i].opcode, opCode) == 0)
 		{
-			handleFunc(opcodes[i].f, opCode, value, cntr, format);
+			handleFunc(opcodes[i].f, cntr, format);
 			found = 1;
 		}
 	}
@@ -48,8 +49,6 @@ void findFunc(char *opCode, char *value, unsigned int cntr, int format)
 /**
  * handleFunc - Handles the opcode.
  * @func: Pointer to the function to use.
- * @opCode: Opcode to handle.
- * @value: Value to use in the function.
  * @cntr: Line number of the instruction in the Monty file.
  * @format: Format of the opcode.
  * Description: This function handles the opcode by calling the function
@@ -57,47 +56,10 @@ void findFunc(char *opCode, char *value, unsigned int cntr, int format)
  * Return: Nothing.
 */
 
-void handleFunc(op_func func, char *opCode, char *value,
-unsigned int cntr, int format)
+void handleFunc(op_func func, unsigned int cntr, int format)
 {
-	stack_t *node = NULL;
-	int flag, i;
-
-	flag = 1;
 	(void)format;
-	if (strcmp(opCode, "push") == 0)
-	{
-		if (value != NULL && value[0] == '-')
-		{
-			value = value + 1;
-			flag = -1;
-		}
-		if (value == NULL)
-		{
-			fprintf(stderr, "L%d: usage: push integer\n", cntr);
-			free_nodes();
-			fclose(head.file);
-			exit(EXIT_FAILURE);
-		}
-		for (i = 0; value[i] != '\0'; i++)
-		{
-			if (isdigit(value[i]) == 0)
-			{
-				/*you have to edit this to funtion in the future*/
-				fprintf(stderr, "L%d: usage: push integer\n", cntr);
-				free_nodes();
-				free(head.contant);
-				fclose(head.file);
-				exit(EXIT_FAILURE);
-			}
-		}
-
-		node = createNode(atoi(value) * flag);
-		func(&node, cntr);
-	}
-	else
-		func(&head.stack, cntr);
-
+	func(&head.stack, cntr);
 }
 
 /**
