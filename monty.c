@@ -28,7 +28,6 @@ int opCode(char *contant, unsigned int cntr, int format)
 		return (format);
 	value = strtok(NULL, delim);
 	/*printf("value: %s\n", value);*/
-
 	findFunc(opCode, value, cntr, format);
 	return (format);
 }
@@ -41,17 +40,17 @@ int opCode(char *contant, unsigned int cntr, int format)
 void readFile(FILE *readFile)
 {
 	int cntr = 0, format = 0;
-	char *contant = NULL;
+	/*char *contant = NULL;*/
 	size_t len = 0;
 
-	while (getline(&contant, &len, readFile) != -1)
+	while (getline(&head.contant, &len, readFile) != -1)
 	{
 		cntr++;
 		/*printf("format: %s\n", contant);*/
-		format =  opCode(contant, cntr, format);
+		format =  opCode(head.contant, cntr, format);
 
 	}
-	free(contant);
+	free(head.contant);
 }
 
 /**

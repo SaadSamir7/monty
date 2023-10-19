@@ -1,5 +1,16 @@
 #include "monty.h"
 
+/**
+ * findFunc - Finds the opcode.
+ * @opCode: Opcode to find.
+ * @value: Value to use in the function.
+ * @cntr: Line number of the instruction in the Monty file.
+ * @format: Format of the opcode.
+ * Description: This function finds the opcode by comparing the opcode
+ * passed as an argument with the opcodes in the struct.
+ * Return: Nothing.
+*/
+
 void findFunc(char *opCode, char *value, unsigned int cntr, int format)
 {
 	int i, found;
@@ -34,6 +45,18 @@ void findFunc(char *opCode, char *value, unsigned int cntr, int format)
 	}
 }
 
+/**
+ * handleFunc - Handles the opcode.
+ * @func: Pointer to the function to use.
+ * @opCode: Opcode to handle.
+ * @value: Value to use in the function.
+ * @cntr: Line number of the instruction in the Monty file.
+ * @format: Format of the opcode.
+ * Description: This function handles the opcode by calling the function
+ * passed as an argument.
+ * Return: Nothing.
+*/
+
 void handleFunc(op_func func, char *opCode, char *value,
 unsigned int cntr, int format)
 {
@@ -63,6 +86,7 @@ unsigned int cntr, int format)
 				/*you have to edit this to funtion in the future*/
 				fprintf(stderr, "L%d: usage: push integer\n", cntr);
 				free_nodes();
+				free(head.contant);
 				fclose(head.file);
 				exit(EXIT_FAILURE);
 			}

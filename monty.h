@@ -12,7 +12,7 @@
 /* define */
 #define notUsed __attribute__((unused))
 
-#define INIT_STATE {NULL, NULL, NULL, NULL}
+#define INIT_STATE {NULL, NULL, NULL}
 
 /**
  * struct stack_s - doubly linked list representation of a stack (or queue)
@@ -54,8 +54,7 @@ typedef struct state_s
 {
 	stack_t *stack;
 	FILE *file;
-	char *opCode;
-	char *value;
+	char *contant;
 } state_t;
 
 extern state_t head;
